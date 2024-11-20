@@ -15,7 +15,7 @@ export default function App() {
 
   return (
     <main>
-      <Headermain name="Calcilfy" />
+      <Headermain name="Calculation Web" />
       <div className="dropdown-container">
         <label htmlFor="conversion-type">Choose a conversion type:</label>
         <select
