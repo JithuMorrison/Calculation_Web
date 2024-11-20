@@ -26,6 +26,7 @@ main {
   height: 100px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 50px;
   z-index: 1000; 
 }
@@ -85,7 +86,7 @@ main {
   padding: 20px;
   padding-top:50px;
   text-align: center;
-  height:250px;
+  height:300px;
   width: 250px;
 }
 
@@ -116,4 +117,59 @@ main {
 
 .card button:hover {
   background-color: #45a049;
+}
+
+
+.dropdown-container {
+  margin-top: 100px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
+  padding: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown {
+  margin-left: 10px;
+  padding: 5px;
+}
+
+.content {
+  font-size: 18px;
+  margin-top: -100px;
+  top: 0;
+  position: absolute;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  margin-top: -40px;
+  gap: 80px;
+}
+
+.all-conversions-container {
+  margin-left: 20px;
+  width: 40%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
 }

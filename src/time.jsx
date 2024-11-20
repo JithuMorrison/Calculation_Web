@@ -3,128 +3,108 @@ import './App.css';
 import ConversionCard from './Card';
 
 export default function TimeConversion() {
-  // Conversion for hr to sec
-  const [hrInput, setHrInput] = useState('');
-  const [secFromHr, setSecFromHr] = useState('');
-  const handleHrToSec = () => {
-    const conversion = hrInput * 3600;
-    setSecFromHr(conversion);
+  const [inputValue, setInputValue] = useState('');
+  const [convertedValue, setConvertedValue] = useState('');
+  const [fromUnit, setFromUnit] = useState('hr');
+  const [toUnit, setToUnit] = useState('sec');
+
+  const conversionToSeconds = {
+    sec: 1,
+    min: 60,
+    hr: 3600,
+    day: 86400,
   };
 
-  // Conversion for sec to min
-  const [secInput, setSecInput] = useState('');
-  const [minFromSec, setMinFromSec] = useState('');
-  const handleSecToMin = () => {
-    const conversion = secInput / 60;
-    setMinFromSec(conversion);
+  const convertToSeconds = (value, unit) => {
+    return value * conversionToSeconds[unit];
   };
 
-  // Conversion for min to sec
-  const [minInput, setMinInput] = useState('');
-  const [secFromMin, setSecFromMin] = useState('');
-  const handleMinToSec = () => {
-    const conversion = minInput * 60;
-    setSecFromMin(conversion);
+  // Function to convert meters to the desired unit
+  const convertFromSeconds = (value, unit) => {
+    return value / conversionToSeconds[unit];
   };
 
-  // Conversion for sec to hr
-  const [secInput2, setSecInput2] = useState('');
-  const [hrFromSec, setHrFromSec] = useState('');
-  const handleSecToHr = () => {
-    const conversion = secInput2 / 3600;
-    setHrFromSec(conversion);
+  // Handle conversion
+  const handleConversion = () => {
+    const valueInSeconds = convertToSeconds(Number(inputValue), fromUnit);
+    const finalValue = convertFromSeconds(valueInSeconds, toUnit);
+    setConvertedValue(finalValue);
   };
 
-  // Conversion for min to hr
-  const [minInput2, setMinInput2] = useState('');
-  const [hrFromMin, setHrFromMin] = useState('');
-  const handleMinToHr = () => {
-    const conversion = minInput2 / 60;
-    setHrFromMin(conversion);
+  const generateAllConversions = (valueInSeconds) => {
+    const allConversions = {};
+    Object.keys(conversionToSeconds).forEach((unit) => {
+      allConversions[unit] = convertFromSeconds(valueInSeconds, unit);
+    });
+    return allConversions;
   };
 
-  // Conversion for hr to min
-  const [hrInput2, setHrInput2] = useState('');
-  const [minFromHr, setMinFromHr] = useState('');
-  const handleHrToMin = () => {
-    const conversion = hrInput2 * 60;
-    setMinFromHr(conversion);
-  };
-
-  // Conversion for hr to days
-  const [hrInput3, setHrInput3] = useState('');
-  const [daysFromHr, setDaysFromHr] = useState('');
-  const handleHrToDays = () => {
-    const conversion = hrInput3 / 24;
-    setDaysFromHr(conversion);
-  };
-
-  // Conversion for days to hr
-  const [daysInput, setDaysInput] = useState('');
-  const [hrFromDays, setHrFromDays] = useState('');
-  const handleDaysToHr = () => {
-    const conversion = daysInput * 24;
-    setHrFromDays(conversion);
-  };
+  // Calculate all conversions if the input is valid
+  const allConversions = inputValue
+    ? generateAllConversions(convertToSeconds(parseFloat(inputValue), fromUnit))
+    : {};
 
   return (
+    <div>
     <div className="conversion-container">
-      <ConversionCard
-        name="Hr to Sec"
-        inputValue={hrInput}
-        setInputValue={setHrInput}
-        convertedValue={secFromHr}
-        handleConvert={handleHrToSec}
-      />
-      <ConversionCard
-        name="Sec to Min"
-        inputValue={secInput}
-        setInputValue={setSecInput}
-        convertedValue={minFromSec}
-        handleConvert={handleSecToMin}
-      />
-      <ConversionCard
-        name="Min to Sec"
-        inputValue={minInput}
-        setInputValue={setMinInput}
-        convertedValue={secFromMin}
-        handleConvert={handleMinToSec}
-      />
-      <ConversionCard
-        name="Sec to Hr"
-        inputValue={secInput2}
-        setInputValue={setSecInput2}
-        convertedValue={hrFromSec}
-        handleConvert={handleSecToHr}
-      />
-      <ConversionCard
-        name="Min to Hr"
-        inputValue={minInput2}
-        setInputValue={setMinInput2}
-        convertedValue={hrFromMin}
-        handleConvert={handleMinToHr}
-      />
-      <ConversionCard
-        name="Hr to Min"
-        inputValue={hrInput2}
-        setInputValue={setHrInput2}
-        convertedValue={minFromHr}
-        handleConvert={handleHrToMin}
-      />
-      <ConversionCard
-        name="Hr to Days"
-        inputValue={hrInput3}
-        setInputValue={setHrInput3}
-        convertedValue={daysFromHr}
-        handleConvert={handleHrToDays}
-      />
-      <ConversionCard
-        name="Days to Hr"
-        inputValue={daysInput}
-        setInputValue={setDaysInput}
-        convertedValue={hrFromDays}
-        handleConvert={handleDaysToHr}
-      />
+    <h1>Time Conversion</h1>
+      <div className="dropdown-group">
+        <label htmlFor="from-unit">Convert from: </label>
+        <select
+          id="from-unit"
+          value={fromUnit}
+          onChange={(e) => setFromUnit(e.target.value)}
+          className='dropdown'
+        >
+          <option value="sec">Seconds</option>
+          <option value="min">Minutes</option>
+          <option value="hr">Hours</option>
+          <option value="day">Days</option>
+        </select>
+      </div>
+
+      <div className="dropdown-group">
+        <label htmlFor="to-unit">Convert to: </label>
+        <select
+          id="to-unit"
+          value={toUnit}
+          onChange={(e) => setToUnit(e.target.value)}
+          className='dropdown'
+        >
+          <option value="sec">Seconds</option>
+          <option value="min">Minutes</option>
+          <option value="hr">Hours</option>
+          <option value="day">Days</option>
+        </select>
+      </div>
+      </div>
+      <div className="center-container">
+        <ConversionCard
+          name="Time Conversion"
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          convertedValue={convertedValue}
+          handleConvert={handleConversion}
+        />
+        <div className="all-conversions-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Unit</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(allConversions).map((unit) => (
+              <tr key={unit}>
+                <td>{unit}</td>
+                <td>{allConversions[unit].toFixed(6)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+        </div>
     </div>
   );
 }

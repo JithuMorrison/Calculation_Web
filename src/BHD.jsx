@@ -3,98 +3,146 @@ import './App.css';
 import ConversionCard from './Card';
 
 export default function NumberSystemConversion() {
-  // Conversion for Decimal to Hexadecimal
-  const [decimalhexInput, setDecimalhexInput] = useState('');
-  const [hexFromDecimal, setHexFromDecimal] = useState('');
-  const handleDecimalToHex = () => {
-    const conversion = parseInt(decimalhexInput).toString(16).toUpperCase();
-    setHexFromDecimal(conversion);
+  const [inputValue, setInputValue] = useState('');
+  const [fromUnit, setFromUnit] = useState('Binary');
+  const [toUnit, setToUnit] = useState('Decimal');
+  const [convertedValue, setConvertedValue] = useState('');
+  const [conversionResults, setConversionResults] = useState([]);
+
+  const convert = () => {
+    const input = inputValue.trim();
+    let results = {};
+
+    try {
+      if (fromUnit === toUnit) {
+        results[toUnit] = input;
+      } else {
+        let decimalValue = convertToDecimal(input);
+        if (decimalValue !== null) {
+          results = {
+            Decimal: convertFromDecimal(decimalValue, 'Decimal'),
+            Binary: convertFromDecimal(decimalValue, 'Binary'),
+            Octal: convertFromDecimal(decimalValue, 'Octal'),
+            Hexadecimal: convertFromDecimal(decimalValue, 'Hexadecimal'),
+          };
+        } else {
+          results = { Invalid: 'Invalid Input' };
+        }
+      }
+    } catch (error) {
+      results = { Invalid: 'Invalid Input' };
+    }
+
+    setConvertedValue(results[toUnit] || 'Invalid Input');
+    setConversionResults(results);
   };
 
-  // Conversion for Decimal to Binary
-  const [decimalbinaryInput, setDecimalBinaryInput] = useState('');
-  const [binaryFromDecimal, setBinaryFromDecimal] = useState('');
-  const handleDecimalToBinary = () => {
-    const conversion = parseInt(decimalbinaryInput).toString(2);
-    setBinaryFromDecimal(conversion);
+  const convertToDecimal = (input) => {
+    let decimalValue = null;
+    switch (fromUnit) {
+      case 'Binary':
+        decimalValue = parseInt(input, 2);
+        break;
+      case 'Octal':
+        decimalValue = parseInt(input, 8);
+        break;
+      case 'Hexadecimal':
+        decimalValue = parseInt(input, 16);
+        break;
+      case 'Decimal':
+        decimalValue = parseInt(input, 10);
+        break;
+      default:
+        decimalValue = null;
+    }
+    return isNaN(decimalValue) ? null : decimalValue;
   };
 
-  // Conversion for Decimal to Octal
-  const [decimaloctalInput, setDecimalOctalInput] = useState('');
-  const [octalFromDecimal, setOctalFromDecimal] = useState('');
-  const handleDecimalToOctal = () => {
-    const conversion = parseInt(decimaloctalInput).toString(8);
-    setOctalFromDecimal(conversion);
-  };
-
-  // Conversion for Binary to Hexadecimal
-  const [binaryHexInput, setBinaryHexInput] = useState('');
-  const [hexFromBinary, setHexFromBinary] = useState('');
-  const handleBinaryToHex = () => {
-    const conversion = parseInt(binaryHexInput, 2).toString(16).toUpperCase();
-    setHexFromBinary(conversion);
-  };
-
-  // Conversion for Binary to Octal
-  const [binaryOctalInput, setBinaryOctalInput] = useState('');
-  const [octalFromBinary, setOctalFromBinary] = useState('');
-  const handleBinaryToOctal = () => {
-    const conversion = parseInt(binaryOctalInput, 2).toString(8);
-    setOctalFromBinary(conversion);
-  };
-
-  // Conversion for Octal to Hexadecimal
-  const [octalHexInput, setOctalHexInput] = useState('');
-  const [hexFromOctal, setHexFromOctal] = useState('');
-  const handleOctalToHex = () => {
-    const conversion = parseInt(octalHexInput, 8).toString(16).toUpperCase();
-    setHexFromOctal(conversion);
+  const convertFromDecimal = (decimalValue, toUnit) => {
+    switch (toUnit) {
+      case 'Binary':
+        return decimalValue.toString(2);
+      case 'Octal':
+        return decimalValue.toString(8);
+      case 'Hexadecimal':
+        return decimalValue.toString(16).toUpperCase();
+      case 'Decimal':
+        return decimalValue.toString(10);
+      default:
+        return 'Invalid Conversion';
+    }
   };
 
   return (
-    <div className="conversion-container">
-      <ConversionCard
-        name="Decimal to Hexadecimal"
-        inputValue={decimalhexInput}
-        setInputValue={setDecimalhexInput}
-        convertedValue={hexFromDecimal}
-        handleConvert={handleDecimalToHex}
-      />
-      <ConversionCard
-        name="Decimal to Binary"
-        inputValue={decimalbinaryInput}
-        setInputValue={setDecimalBinaryInput}
-        convertedValue={binaryFromDecimal}
-        handleConvert={handleDecimalToBinary}
-      />
-      <ConversionCard
-        name="Decimal to Octal"
-        inputValue={decimaloctalInput}
-        setInputValue={setDecimalOctalInput}
-        convertedValue={octalFromDecimal}
-        handleConvert={handleDecimalToOctal}
-      />
-      <ConversionCard
-        name="Binary to Hexadecimal"
-        inputValue={binaryHexInput}
-        setInputValue={setBinaryHexInput}
-        convertedValue={hexFromBinary}
-        handleConvert={handleBinaryToHex}
-      />
-      <ConversionCard
-        name="Binary to Octal"
-        inputValue={binaryOctalInput}
-        setInputValue={setBinaryOctalInput}
-        convertedValue={octalFromBinary}
-        handleConvert={handleBinaryToOctal}
-      />
-      <ConversionCard
-        name="Octal to Hexadecimal"
-        inputValue={octalHexInput}
-        setInputValue={setOctalHexInput}
-        convertedValue={hexFromOctal}
-        handleConvert={handleOctalToHex}
-      />
+    <div>
+      <div className="conversion-container">
+        <h1>Number System Conversion</h1>
+
+        <div className="dropdown-group">
+          <label htmlFor="from-unit">Convert From:</label>
+          <select
+            id="from-unit"
+            value={fromUnit}
+            onChange={(e) => setFromUnit(e.target.value)}
+            className="dropdown"
+          >
+            <option value="Binary">Binary</option>
+            <option value="Octal">Octal</option>
+            <option value="Hexadecimal">Hexadecimal</option>
+            <option value="Decimal">Decimal</option>
+          </select>
+        </div>
+
+        <div className="dropdown-group">
+          <label htmlFor="to-unit">Convert To:</label>
+          <select
+            id="to-unit"
+            value={toUnit}
+            onChange={(e) => setToUnit(e.target.value)}
+            className="dropdown"
+          >
+            <option value="Decimal">Decimal</option>
+            <option value="Binary">Binary</option>
+            <option value="Octal">Octal</option>
+            <option value="Hexadecimal">Hexadecimal</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="center-container">
+        <ConversionCard
+          name={`Result for ${fromUnit} to ${toUnit}`}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          convertedValue={convertedValue}
+          handleConvert={convert}
+        />
+        <div className="all-conversions-container">
+        <h2>Conversion Results</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Conversion Type</th>
+              <th>Converted Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Object.keys(conversionResults).length === 0 ? (
+              <tr>
+                <td colSpan="2">No conversion results yet.</td>
+              </tr>
+            ) : (
+              Object.keys(conversionResults).map((key, index) => (
+                <tr key={index}>
+                  <td>{fromUnit} to {key}</td>
+                  <td>{conversionResults[key]}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+      </div>
     </div>
   );
 }
