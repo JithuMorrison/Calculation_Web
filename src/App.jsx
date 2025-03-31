@@ -5,6 +5,7 @@ import Distance from './distance';
 import TimeConversion from './time';
 import BitwiseOperations from './bitwise';
 import NumberSystemConversion from './BHD';
+import Temperature from './temperature';
 
 export default function App() {
   const [currentSection, setCurrentSection] = useState('distance');
@@ -28,6 +29,7 @@ export default function App() {
           <option value="time">Time Conversion</option>
           <option value="bitwise">Bitwise Operation</option>
           <option value="BHD">NumberSystemConversion</option>
+          <option value="temp">Temperature Conversion</option>
         </select>
       </div>
 
@@ -36,6 +38,7 @@ export default function App() {
         {currentSection === 'time' && <TimeConversion/>}
         {currentSection === 'bitwise' && <BitwiseOperations/>}
         {currentSection === 'BHD' && <NumberSystemConversion/>}
+        {currentSection === 'temp' && <Temperature/>}
       </div>
     </main>
   );
